@@ -1,3 +1,3 @@
-# Advanced-React
+# Study of react + graphql
 
 frontend

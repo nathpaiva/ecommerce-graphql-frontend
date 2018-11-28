@@ -1,2 +1,3 @@
-# ecommerce-graphql
-Study of react + graphql
+# Advanced-React
+
+frontend

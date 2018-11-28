@@ -1,8 +1,8 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
 const Sell = props => (
   <div>
-    <h2>Sell</h2>
+    <p>Sell!</p>
   </div>
 );
 

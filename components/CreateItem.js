@@ -4,7 +4,6 @@ import gql from 'graphql-tag';
 import Router from 'next/router';
 
 import Form from './styles/Form';
-import formatMoney from '../lib/formatMoney';
 import Error from './ErrorMessage';
 
 const CREATE_ITEM_MUTATION = gql`
@@ -39,6 +38,7 @@ class CreateItem extends Component {
     };
 
     this.handlerChange = this.handlerChange.bind(this);
+    this.upploadFile = this.upploadFile.bind(this);
   }
 
   handlerChange(e) {
@@ -47,6 +47,27 @@ class CreateItem extends Component {
 
     this.setState({
       [name]: val
+    });
+  }
+
+  async upploadFile(e) {
+    const files = e.target.files;
+    const data = new FormData();
+    data.append('file', files[0]);
+    data.append('upload_preset', 'sickfists');
+
+    const res = await fetch('https://api.cloudinary.com/v1_1/dlhnknbip/image/upload', {
+      method: 'POST',
+      body: data,
+    });
+
+    if(!res.ok) return;
+
+    const file = await res.json();
+
+    this.setState({
+      image: file.secure_url,
+      largeImage: file.eager[0].secure_url,
     });
   }
 
@@ -65,6 +86,11 @@ class CreateItem extends Component {
           }} >
             <Error error={error} />
             <fieldset disabled={loading} aria-busy={loading}>
+              <label htmlFor="file">
+                File
+                <input type="file" id="file" name="file" placeholder="file" required onChange={this.upploadFile} />
+              </label>
+              {this.state.image && <img src={this.state.image} alt="Updaload preview" width="200px" />}
               <label htmlFor="title">
                 Title
                 <input type="text" id="title" name="title" placeholder="Title" required value={this.state.title} onChange={this.handlerChange} />

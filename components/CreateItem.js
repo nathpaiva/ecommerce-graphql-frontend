@@ -106,7 +106,6 @@ class CreateItem extends Component {
 
               <button type="submit">Submit</button>
             </fieldset>
-            <h1>Sell an Item.</h1>
           </Form>
         )}
       </Mutation>

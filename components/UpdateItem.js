@@ -96,7 +96,7 @@ class UpdateItem extends Component {
                       <textarea id="description" name="description" placeholder="Enter a description" required defaultValue={data.item.description} onChange={this.handlerChange} />
                     </label>
 
-                    <button type="submit">Submit</button>
+                    <button type="submit">Sav{loading ? 'ind' : 'e'}</button>
                   </fieldset>
                 </Form>
               )}

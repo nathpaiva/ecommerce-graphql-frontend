@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
+import Router from 'next/router';
 
 import Form from './styles/Form';
 import Error from './ErrorMessage';
@@ -65,6 +66,7 @@ class Signup extends PureComponent {
                 name: '',
                 password: '',
               });
+              Router.push('/')
             }}>
               <Error error={error} />
               <fieldset disabled={loading} aria-busy={loading}>

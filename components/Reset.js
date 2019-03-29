@@ -7,28 +7,29 @@ import Form from './styles/Form';
 import Error from './ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
 
-const SIGNIN_MUTATION = gql`
-  mutation SIGNIN_MUTATION (
-    $email: String!,
-  	$password: String!
+const RESET_MUTATION = gql`
+  mutation RESET_MUTATION (
+    $resetPassword: String!
+    $password: String!
+    $confirmPassword: String!
   ) {
-    signin (
-      email: $email,
-      password: $password,
+    resetPassword (
+      resetPassword: $resetPassword
+      password: $password
+      confirmPassword: $confirmPassword
     ) {
-      name
+      id
       email
-      password
+      name
     }
   }
 `;
 
-class Signin extends PureComponent {
+class Reset extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      name: '',
+      confirmPassword: '',
       password: '',
     };
     this.saveToState = this.saveToState.bind(this);
@@ -45,38 +46,32 @@ class Signin extends PureComponent {
   render() {
     return (
       <Mutation
-        mutation={SIGNIN_MUTATION}
-        variables={this.state}
+        mutation={RESET_MUTATION}
+        variables={{
+          ...this.state,
+          resetPassword: this.props.resetToken,
+        }}
         refetchQueries={[
           { query: CURRENT_USER_QUERY },
         ]}
       >
-        {(signin, { loading, error }) => {
+        {(resetPassword, { loading, error }) => {
           return (
             <Form method="post" onSubmit={async e => {
               e.preventDefault();
-              await signin();
+              const teste = await resetPassword();
+							console.log("TCL: Reset -> render -> teste", teste);
 
               this.setState({
-                email: '',
-                name: '',
                 password: '',
+                confirmPassword: '',
               });
+
               Router.push('/');
             }}>
               <Error error={error} />
               <fieldset disabled={loading} aria-busy={loading}>
-                <h2>Sign into your account</h2>
-                <label htmlFor="email">
-                  Email
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="email"
-                    value={this.state.email}
-                    onChange={this.saveToState}
-                  />
-                </label>
+                <h2>Reset password</h2>
                 <label htmlFor="password">
                   Password
                   <input
@@ -87,8 +82,18 @@ class Signin extends PureComponent {
                     onChange={this.saveToState}
                   />
                 </label>
+                <label htmlFor="confirmPassword">
+                  Confirm Password
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="confirmPassword"
+                    value={this.state.confirmPassword}
+                    onChange={this.saveToState}
+                  />
+                </label>
 
-                <button type="submit">Sign In!</button>
+                <button type="submit">Reset your password!</button>
               </fieldset>
             </Form>
           )
@@ -98,4 +103,4 @@ class Signin extends PureComponent {
   }
 }
 
-export default Signin;
+export default Reset;

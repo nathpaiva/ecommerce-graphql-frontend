@@ -1,35 +1,27 @@
 import React, { PureComponent } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import Router from 'next/router';
 
 import Form from './styles/Form';
 import Error from './ErrorMessage';
-import { CURRENT_USER_QUERY } from './User';
 
-const SIGNIN_MUTATION = gql`
-  mutation SIGNIN_MUTATION (
-    $email: String!,
-  	$password: String!
+const REQUEST_RESET_MUTATION = gql`
+  mutation REQUEST_RESET_MUTATION (
+    $email: String!
   ) {
-    signin (
-      email: $email,
-      password: $password,
+    requestReset (
+      email: $email
     ) {
-      name
-      email
-      password
+      message
     }
   }
 `;
 
-class Signin extends PureComponent {
+class RequestReset extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
-      name: '',
-      password: '',
     };
     this.saveToState = this.saveToState.bind(this);
   }
@@ -45,28 +37,23 @@ class Signin extends PureComponent {
   render() {
     return (
       <Mutation
-        mutation={SIGNIN_MUTATION}
+        mutation={REQUEST_RESET_MUTATION}
         variables={this.state}
-        refetchQueries={[
-          { query: CURRENT_USER_QUERY },
-        ]}
       >
-        {(signin, { loading, error }) => {
+        {(requestReset, { loading, error, called }) => {
           return (
             <Form method="post" onSubmit={async e => {
               e.preventDefault();
-              await signin();
+              await requestReset();
 
               this.setState({
                 email: '',
-                name: '',
-                password: '',
               });
-              Router.push('/');
             }}>
               <Error error={error} />
               <fieldset disabled={loading} aria-busy={loading}>
-                <h2>Sign into your account</h2>
+                <h2>Request a password reset</h2>
+                {!error && !loading && called && <p>Sucess! Check your email for a reset link!</p>}
                 <label htmlFor="email">
                   Email
                   <input
@@ -77,18 +64,7 @@ class Signin extends PureComponent {
                     onChange={this.saveToState}
                   />
                 </label>
-                <label htmlFor="password">
-                  Password
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="password"
-                    value={this.state.password}
-                    onChange={this.saveToState}
-                  />
-                </label>
-
-                <button type="submit">Sign In!</button>
+                <button type="submit">Request Reset!</button>
               </fieldset>
             </Form>
           )
@@ -98,4 +74,4 @@ class Signin extends PureComponent {
   }
 }
 
-export default Signin;
+export default RequestReset;

@@ -18,7 +18,6 @@ const SIGNIN_MUTATION = gql`
     ) {
       name
       email
-      password
     }
   }
 `;
@@ -28,7 +27,6 @@ class Signin extends PureComponent {
     super(props);
     this.state = {
       email: '',
-      name: '',
       password: '',
     };
     this.saveToState = this.saveToState.bind(this);
